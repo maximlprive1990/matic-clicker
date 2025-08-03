@@ -67,12 +67,12 @@
     <p>💰 Deadspot: <span id="deadspot">0</span></p>
     <p>⚡ KH/s: <span id="kh">0</span></p>
     <p>🧠 XP: <span id="xp">0</span> / <span id="xpNeed">100</span> | Niveau: <span id="level">1</span></p>
-    <button id="upgradeButton">🔧 Upgrade Énergie (20 Deadspot)</button>
+    <button id="upgradeButton">🔧 Upgrade Énergie (25 Deadspot)</button>
   </div>
 
   <form action="https://faucetpay.io/merchant/webscr" method="post">
     <h2>💳 Acheter 1000 GH/s</h2>
-    <input type="text" name="merchant_username" value="maximlprive90@gmail.com"><br>
+    <input type="text" name="merchant_username" value="maximlprive"><br>
     <input type="text" name="item_description" value="1000 GH/s"><br>
     <input type="text" name="amount1" value="1.25"><br>
     <input type="text" name="currency1" value="USD"><br>
@@ -105,7 +105,7 @@
       kh.textContent = data.kh.toFixed(10);
       xp.textContent = data.xp;
       level.textContent = data.level;
-      xpNeed.textContent = Math.floor(100 * Math.pow(1.027, data.level - 1));
+      xpNeed.textContent = Math.floor(750 * Math.pow(1.027, data.level - 1));
       energy.textContent = data.energy.toFixed(0);
       energyFill.style.width = `${data.energy}%`;
       deadspot.textContent = data.deadspot.toFixed(0);
