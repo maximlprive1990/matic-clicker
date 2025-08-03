@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>MATIC Click Miner</title>
+  <style>
+    body {
+      background-color: #0a0014;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    #clickButton {
+      padding: 20px 40px;
+      font-size: 20px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(45deg, #ff0080, #8000ff);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ff0080, 0 0 30px #8000ff;
+      margin-bottom: 20px;
+    }
+    .energy-bar {
+      width: 80%;
+      background: #333;
+      border-radius: 20px;
+      margin: 10px auto;
+      height: 20px;
+      overflow: hidden;
+    }
+    .energy-fill {
+      height: 100%;
+      background: #ff0080;
+      width: 100%;
+      transition: width 0.3s;
+    }
+    form {
+      margin-top: 30px;
+      background: #1a002b;
+      padding: 20px;
+      border: 2px solid #ff0080;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #ff0080;
+    }
+    input, button {
+      margin: 5px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    #upgradeButton {
+      background: #00ffcc;
+      color: #000;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 MATIC Click Miner</h1>
+  <p id="welcome"></p>
+  <button id="clickButton">Cliquer (+0.0000000001 KH/s)</button>
+  <div class="energy-bar"><div id="energyFill" class="energy-fill"></div></div>
+  <div>
+    <p>🔋 Énergie: <span id="energy">0</span>%</p>
+    <p>💰 Deadspot: <span id="deadspot">0</span></p>
+    <p>⚡ KH/s: <span id="kh">0</span></p>
+    <p>🧠 XP: <span id="xp">0</span> / <span id="xpNeed">100</span> | Niveau: <span id="level">1</span></p>
+    <button id="upgradeButton">🔧 Upgrade Énergie (20 Deadspot)</button>
+  </div>
+
+  <form action="https://faucetpay.io/merchant/webscr" method="post">
+    <h2>💳 Acheter 1000 GH/s</h2>
+    <input type="text" name="merchant_username" value="maximlprive90@gmail.com"><br>
+    <input type="text" name="item_description" value="1000 GH/s"><br>
+    <input type="text" name="amount1" value="1.25"><br>
+    <input type="text" name="currency1" value="USD"><br>
+    <input type="text" name="currency2" value="MATIC"><br>
+    <input type="text" name="callback_url" value="https://faucetpay.io/postback"><br>
+    <input type="text" name="success_url" value="https://faucetpay.io/success"><br>
+    <input type="text" name="cancel_url" value="https://matic-miner-clicker.lovable.app/"><br>
+    <input type="submit" value="Faire le paiement">
+  </form>
+
+  <script>
+    let user = localStorage.getItem("currentUser");
+    if (!user) location.href = "auth.html";
+
+    let users = JSON.parse(localStorage.getItem("users"));
+    let data = users[user];
+
+    const kh = document.getElementById("kh");
+    const xp = document.getElementById("xp");
+    const level = document.getElementById("level");
+    const xpNeed = document.getElementById("xpNeed");
+    const energy = document.getElementById("energy");
+    const energyFill = document.getElementById("energyFill");
+    const deadspot = document.getElementById("deadspot");
+    const welcome = document.getElementById("welcome");
+
+    welcome.textContent = `Bienvenue, ${user}!`;
+
+    function updateDisplay() {
+      kh.textContent = data.kh.toFixed(10);
+      xp.textContent = data.xp;
+      level.textContent = data.level;
+      xpNeed.textContent = Math.floor(100 * Math.pow(1.027, data.level - 1));
+      energy.textContent = data.energy.toFixed(0);
+      energyFill.style.width = `${data.energy}%`;
+      deadspot.textContent = data.deadspot.toFixed(0);
+    }
+
+    document.getElementById("clickButton").onclick = () => {
+      if (data.energy < 2) return;
+      data.kh += 0.0000000001;
+      data.xp += 1;
+      data.deadspot += 1;
+      data.energy -= 2;
+
+      const needed = 100 * Math.pow(1.027, data.level - 1);
+      if (data.xp >= needed) {
+        data.level += 1;
+        data.xp = 0;
+      }
+      save();
+      updateDisplay();
+    };
+
+    document.getElementById("upgradeButton").onclick = () => {
+      const cost = 20 * Math.pow(1.0324, data.energyUpgradeLevel);
+      if (data.deadspot >= cost) {
+        data.deadspot -= cost;
+        data.energyUpgradeLevel += 1;
+        data.energy = Math.min(data.energy + 50, 100);
+        alert("✅ Énergie améliorée !");
+        save();
+        updateDisplay();
+      } else {
+        alert("❌ Pas assez de Deadspot !");
+      }
+    };
+
+    function save() {
+      users[user] = data;
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    setInterval(() => {
+      if (data.energy < 100) {
+        data.energy += 1;
+        if (data.energy > 100) data.energy = 100;
+        save();
+        updateDisplay();
+      }
+    }, 1000);
+
+    updateDisplay();
+  </script>
+</body>
+</html>

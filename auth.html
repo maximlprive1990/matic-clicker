@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion / Inscription</title>
+  <style>
+    body {
+      background-color: #0a0014;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #ff0080;
+      text-shadow: 0 0 10px #ff0080;
+    }
+    input {
+      display: block;
+      margin: 10px auto;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      width: 250px;
+    }
+    button {
+      padding: 10px 30px;
+      background: #ff0040;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ff0040;
+    }
+    #message {
+      margin-top: 10px;
+      color: #00ff99;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔐 Connexion / Inscription</h1>
+  <input type="text" id="username" placeholder="Nom d'utilisateur">
+  <input type="password" id="password" placeholder="Mot de passe">
+  <button onclick="login()">Se connecter</button>
+  <button onclick="register()">Créer un compte</button>
+  <div id="message"></div>
+
+  <script>
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      const stored = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (stored[user] && stored[user].password === pass) {
+        localStorage.setItem("currentUser", user);
+        window.location.href = "index.html";
+      } else {
+        document.getElementById("message").textContent = "❌ Mauvais identifiants.";
+      }
+    }
+
+    function register() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      let stored = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (stored[user]) {
+        document.getElementById("message").textContent = "❗ Ce nom existe déjà.";
+      } else {
+        stored[user] = {
+          password: pass,
+          kh: 0,
+          xp: 0,
+          level: 1,
+          energy: 100,
+          deadspot: 0,
+          energyUpgradeLevel: 0
+        };
+        localStorage.setItem("users", JSON.stringify(stored));
+        document.getElementById("message").textContent = "✅ Compte créé ! Connecte-toi.";
+      }
+    }
+  </script>
+</body>
+</html>
