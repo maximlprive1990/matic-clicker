@@ -68,6 +68,7 @@
     <p>⚡ KH/s: <span id="kh">0</span></p>
     <p>🧠 XP: <span id="xp">0</span> / <span id="xpNeed">100</span> | Niveau: <span id="level">1</span></p>
     <button id="upgradeButton">🔧 Upgrade Énergie (25 Deadspot)</button>
+    <button id="clickUpgradeButton">🖱️ Améliorer le clic (x2, x3...) (50+ Deadspot)</button>
   </div>
 
   <form action="https://faucetpay.io/merchant/webscr" method="post">
@@ -82,6 +83,22 @@
     <input type="text" name="cancel_url" value="https://matic-miner-clicker.lovable.app/"><br>
     <input type="submit" value="Faire le paiement">
   </form>
+  <div id="withdraw">
+    <h2>💸 Retirer</h2>
+    <input type="text" id="wallet" placeholder="Adresse du wallet"><br>
+    <select id="crypto">
+      <option value="DOGE">DOGE</option>
+      <option value="TRX">TRX</option>
+      <option value="MATIC">MATIC</option>
+    </select><br>
+    <input type="number" id="withdrawAmount" placeholder="Montant à retirer"><br>
+    <button onclick="withdraw()">Confirmer Retrait</button>
+  </div>
+
+  <div id="topPlayers">
+    <h2>🏆 Meilleurs joueurs</h2>
+    <ol id="leaderboard"></ol>
+  </div>
 
   <script>
     let user = localStorage.getItem("currentUser");
@@ -156,6 +173,7 @@
     }, 1000);
 
     updateDisplay();
+    <script src="script.js"></script>
   </script>
 </body>
 </html>
